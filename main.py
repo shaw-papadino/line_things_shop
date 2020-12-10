@@ -59,7 +59,7 @@ def open_liff(req, resp):
 @api.route("/callback")
 async def callback(req, resp):
     print(req.method)
-    print(req.media())
+    print(await req.media())
     print(req.headers["X-Line-Signature"])
     if req.method == "post":
         signature = req.headers["X-Line-Signature"]
