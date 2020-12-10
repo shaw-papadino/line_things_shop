@@ -3,6 +3,7 @@ import sys
 import json
 import responder
 import base64
+import asyncio
 from linebot import LineBotApi, WebhookHandler
 from linebot.exceptions import InvalidSignatureError
 from linebot.models import (
@@ -17,6 +18,7 @@ from linebot.models import (
             TextSendMessage
         )
 from pathlib import Path
+from write import run, mac_addr, WRITE_CHARACTERISTIC_UUID
 
 print(os.getcwd())
 print(__file__)
@@ -61,8 +63,6 @@ async def callback(req, resp):
     signature = req.headers["X-Line-Signature"]
     body = await req.media()
     body = json.dumps(body, ensure_ascii=False).replace(' ', '')
-    # print("Request body: " + body, flush=True)
-    # print(signature)
 
     try:
         handler.handle(body, signature)
@@ -70,30 +70,14 @@ async def callback(req, resp):
         resp.text = "OK"
     except InvalidSignatureError:
        resp.status_code = api.status_codes.HTTP_503
-       resp.text = e
-    # else:
-    #     resp.text = "404: This is not a webpage you are looking for."
-    #     resp.status_code = api.status_codes.HTTP_404
-
-###
-# Beaconからメッセージ受信時
-###
-@handler.add(BeaconEvent)
-def handle_message(event):
-    messages = create_carousel_column(create_carousel(carousel))
-    
-    line_bot_api.reply_message(event.reply_token, messages)
-
+       resp.text = "miss"
 
 ###
 # deviceからメッセージ受信時
 ###
 @handler.add(ThingsEvent)
 def handle_message(event):
-    # things auro communication
-    # 始めたこと
-    # 終わったこと
-    # 何回ポモドーロしたか
+
     if event.things is None:
         print(event)
         return
@@ -103,24 +87,34 @@ def handle_message(event):
     if event.things.result.result_code != "success":
         print(event)
         return
-    pomodoro_num = base64.b64decode(event.things.result.ble_notification_payload).decode()
-    if pomodoro_num[0] == "S":
-        mes = "{}ポモドーロ始めるよ！".format(pomodoro_num[1])
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=mes))
-    elif pomodoro_num[0] == "F":
-        mes = "{}ポモドーロ終了したよ.\nゆっくり休んでね.".format(pomodoro_num[1])
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=mes))
+
+    message = base64.b64decode(event.things.result.ble_notification_payload).decode()
+    if message[0] == "S":
+        liff_url = "https://liff.line.me/1655338407-PZBX17Wz"
+        line_bot_api.reply_message(
+           event.reply_token,
+           TextSendMessage(text="今アンケートに答えると割引チャンス!\n" + liff_url)
+        )
+    else:
+        line_bot_api.reply_message(
+           event.reply_token,
+           TextSendMessage(text="対応していません")
+        )
+
 
 ###
 # メッセージ受信時
 ###
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    liff_url = "https://liff.line.me/1655338407-PZBX17Wz"
-    line_bot_api.reply_message(
-       event.reply_token,
-       TextSendMessage(text="アンケートに答えるとお安くしますよ\n" + liff_url)
-    )
+    if event.message.text == "送信しました":
+        loop = asyncio.get_event_loop()
+        loop.run_until_complete(run(mac_addr, loop))
+        line_bot_api.reply_message(
+           event.reply_token,
+           TextSendMessage(text="割引されるのでお待ちを")
+        )
+        
 
 
 if __name__=="__main__":
