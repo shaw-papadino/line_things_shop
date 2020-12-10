@@ -58,24 +58,20 @@ def open_liff(req, resp):
 
 @api.route("/callback")
 async def callback(req, resp):
-    print(req.method)
-    print(await req.media())
-    print(req.headers["X-Line-Signature"])
-    if req.method == "post":
-        signature = req.headers["X-Line-Signature"]
-        body = await req.media()
-        print("Request body: " + body, flush=True)
-        print(signature)
+    signature = req.headers["X-Line-Signature"]
+    body = await req.media()
+    print("Request body: " + body, flush=True)
+    print(signature)
 
-        try:
-            handler.handle(body, signature)
-        except InvalidSignatureError:
-           resp.status_code = api.status_codes.HTTP_503
-           return
-        resp.text = "OK"
-    else:
-        resp.text = "404: This is not a webpage you are looking for."
-        resp.status_code = api.status_codes.HTTP_404
+    try:
+        handler.handle(body, signature)
+    except InvalidSignatureError:
+       resp.status_code = api.status_codes.HTTP_503
+       return
+    resp.text = "OK"
+    # else:
+    #     resp.text = "404: This is not a webpage you are looking for."
+    #     resp.status_code = api.status_codes.HTTP_404
 
 ###
 # Beaconからメッセージ受信時
@@ -113,8 +109,14 @@ def handle_message(event):
 ###
 # メッセージ受信時
 ###
-# @handler.add(MessageEvent, message=TextMessage)
-# def handle_message(event):
+@handler.add(MessageEvent, message=TextMessage)
+def handle_message(event):
+    text_message = TextSendMessage(text="!")
+    line_bot_api.reply_message(
+       event.reply_token,
+       TextSendMessage(text=text_message)
+    )
+
 
 if __name__=="__main__":
     port = int(os.environ.get("PORT", 5000))
