@@ -60,15 +60,17 @@ def open_liff(req, resp):
 async def callback(req, resp):
     signature = req.headers["X-Line-Signature"]
     body = await req.media()
-    print("Request body: " + body, flush=True)
-    print(signature)
+    body = json.dumps(body, ensure_ascii=False).replace(' ', '')
+    # print("Request body: " + body, flush=True)
+    # print(signature)
 
     try:
         handler.handle(body, signature)
+        resp.status_code = 200
+        resp.text = "OK"
     except InvalidSignatureError:
        resp.status_code = api.status_codes.HTTP_503
-       return
-    resp.text = "OK"
+       resp.text = e
     # else:
     #     resp.text = "404: This is not a webpage you are looking for."
     #     resp.status_code = api.status_codes.HTTP_404
@@ -111,13 +113,12 @@ def handle_message(event):
 ###
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    text_message = TextSendMessage(text="!")
     line_bot_api.reply_message(
        event.reply_token,
-       TextSendMessage(text=text_message)
+       TextSendMessage(text=event.message.text)
     )
 
 
 if __name__=="__main__":
-    port = int(os.environ.get("PORT", 5000))
-    api.run(address="0.0.0.0", port=port)
+    # port = int(os.environ.get("PORT", 5000))
+    api.run(address="0.0.0.0")
