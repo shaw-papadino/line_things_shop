@@ -1,75 +1,39 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <script src="https://d.line-scdn.net/liff/1.0/sdk.js"></script>
-    <!-- vConsole -->
-    <script src="/static/js/vconsole.min.js"></script>
-    <script src="/static/js/liff.js"></script>
-    <link rel="stylesheet" type="text/css" href="/static/css/liff.css" />
-  </head>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>予約フォーム</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.min.css">
+</head>
 
-  <body>
-    <!-- Title -->
-    <h2>LINE Things Starter</h2>
-    <hr />
-    <p>
-      <img id="loading-animation" class="" src="../static/loading.gif" height="14px" />
-      <span id="status" class="inactive">Device disconnected</span>
-    </p>
-    <hr />
-    <div id="controls" class="hidden">
-      <!-- Device Info Table -->
-      <table class="device-info-table">
-        <tr>
-          <th class="device-info-cell device-info-key">Name</th>
-          <td class="device-info-cell device-info-val" id="device-name"></td>
-        </tr>
-        <tr>
-          <th class="device-info-cell device-info-key">ID</th>
-          <td class="device-info-cell device-info-val" id="device-id"></td>
-        </tr>
-        <tr>
-          <th class="device-info-cell device-info-key">PSDI</th>
-          <td class="device-info-cell device-info-val" id="device-psdi"></td>
-        </tr>
-        <tr>
-          <th class="device-info-cell device-info-key">Button state</th>
-          <td class="device-info-cell device-info-val">
-            <button id="btn-state" class="btn btn-state" disabled>Released</button>
-          </td>
-        </tr>
-        <tr>
-          <th class="device-info-cell device-info-key">Click count</th>
-          <td class="device-info-cell device-info-val" id="click-count">0</td>
-        </tr>
-      </table>
-      <hr />
-      <!-- Toggle LED -->
-      <p>
-        <button id="btn-led-toggle" class="btn btn-led-toggle" onclick="handlerToggleLed()">Switch LED ON</button>
-      </p>
-      <hr />
-    </div>
-  </body>
-<script>
-window.onload = function(){
-    initVConsole();
+<body>
+    <form class="w-75 mx-auto">
 
-}
-// Initialize vConsole
-function initVConsole() {
-    window.vConsole = new window.VConsole({
-        defaultPlugins: ['system', 'network', 'element', 'storage'],
-        maxLogNumber: 1000,
-        onReady: function() {
-            console.log('vConsole is ready.');
-        },
-        onClearLog: function() {
-            console.log('on clearLog');
-        }
-    });
-}
-</script>
+        <p class="mt-3">アンケートだよ</p>
+
+        <p class="mt-3">氏名</p>
+        <div id="form-name">
+            <input class="form-control w-100 mt-1" name="name" maxlength="10">
+        </div>
+        <p class="mt-3">好きな食べ物</p>
+        <div id="form-name">
+            <input class="form-control w-100 mt-1" name="food" maxlength="10">
+        </div>
+
+        <input type="submit" class="mt-4 btn btn-primary" value="送信">
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+    <script charset="utf-8" src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+    <script src="liff.js"></script>
+    <script src="index.js"></script>
+</body>
+
 </html>
