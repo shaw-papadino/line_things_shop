@@ -116,9 +116,10 @@ def handle_message(event):
 ###
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
+    liff_url = "https://liff.line.me/1655338407-PZBX17Wz"
     line_bot_api.reply_message(
        event.reply_token,
-       TextSendMessage(text=event.message.text)
+       TextSendMessage(text="アンケートに答えるとお安くしますよ\n" + liff_url)
     )
 
 
