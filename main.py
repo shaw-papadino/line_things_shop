@@ -22,7 +22,7 @@ print(os.getcwd())
 print(__file__)
 ROOT_DIR = Path(__file__).resolve().parents[0]
 api = responder.API(
-    static_dir = str(ROOT_DIR.joinpath("templates"))
+    static_dir = str(ROOT_DIR.joinpath("static"))
 )
 
 ###
