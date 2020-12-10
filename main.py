@@ -94,6 +94,7 @@ def handle_message(event):
     # 終わったこと
     # 何回ポモドーロしたか
     if event.things.type != "scenarioResult":
+        print(event)
         return
     if event.things.result.result_code != "success":
         print(event)
